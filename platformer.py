@@ -29,7 +29,7 @@ class Player():
         self.counter = 0
         #going through 4 movements of character, " f'{}' " captures all 4 images
         for num in range(1,5):
-            img_right = pygame.image.load(f'assets/guy{num}.png')
+            img_right = pygame.image.load(f'assets/guy{num}.png').convert_alpha()
             img_right = pygame.transform.scale(img_right, (40, 80)) 
             self.images_right.append(img_right)
     
@@ -43,7 +43,7 @@ class Player():
     def update(self):
         dx = 0
         dy = 0
-        
+
         #get keypresses
         key = pygame.key.get_pressed()
         if key[pygame.K_SPACE] and self.jumped == False:
@@ -56,7 +56,7 @@ class Player():
         if key[pygame.K_LEFT]:
             dx -= 5
         if key[pygame.K_RIGHT]:
-            dx -= 5
+            dx += 5
 
         #add gravity
         self.vel_y += 1 
@@ -70,6 +70,9 @@ class Player():
         self.rect.x += dx
         self.rect.y += dy
 
+        if self.rect.bottom > screen_height:
+            self.rect.bottom = screen_height
+            dy = 0
 
 
 
