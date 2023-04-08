@@ -180,8 +180,16 @@ class Enemy(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
+        self.move_direction = 1
+        self.move_counter = 0
 
     def update(self):
+        self.rect.x += self.move_direction
+        self.move_counter += 1
+        #moving left, since it hits 51, minus 1
+        if abs(self.move_counter) > 50:
+            self.move_direction *= -1
+            self.move_counter *= -1
 
 #for every grid
 world_data = [
@@ -222,6 +230,7 @@ while run:
 
     world.draw()
     #can draw sprite methods
+    enemy_group.update()
     enemy_group.draw(screen) 
 
     player.update()
