@@ -165,6 +165,10 @@ class World():
                 if tile == 3:
                     enemy = Enemy(col_count * tile_size, row_count * tile_size -10)
                     enemy_group.add(enemy)
+                
+                if tile == 6:
+                    spike = Spike(col_count * tile_size, row_count * tile_size + (tile_size // 2))
+                    spike_group.add(spike)
                 col_count += 1
             row_count += 1
 
@@ -190,6 +194,15 @@ class Enemy(pygame.sprite.Sprite):
         if abs(self.move_counter) > 50:
             self.move_direction *= -1
             self.move_counter *= -1
+
+class Spike(pygame.sprite.Sprite):
+    def __init__(self,x,y):
+        pygame.sprite.Sprite.__init__(self)
+        img = pygame.image.load('assets/spike.png')
+        self.image = pygame.transform.scale(img, (tile_size, tile_size // 2))
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
 
 #for every grid
 world_data = [
@@ -218,6 +231,7 @@ world_data = [
 #player is 80px tall, tile is 50px
 player = Player(100, screen_height - 130) 
 enemy_group = pygame.sprite.Group()
+spike_group = pygame.sprite.Group()
 world = World(world_data)
 
 run = True
@@ -232,6 +246,7 @@ while run:
     #can draw sprite methods
     enemy_group.update()
     enemy_group.draw(screen) 
+    spike_group.draw(screen)
 
     player.update()
 
