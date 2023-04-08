@@ -106,11 +106,13 @@ class Player():
             if tile[1].colliderect(self.rect.x + dx, self.rect.y, self.width, self.height):
                dx = 0
 
-            #check for collision in y direction
+        #check for collision in y direction
             if tile[1].colliderect(self.rect.x, self.rect.y + dy, self.width, self.height):
                 #check if below ground like jumping
                 if self.vel_y < 0:
                     dy = tile[1].bottom - self.rect.top
+                    self.vel_y = 0
+                #check if above ground like falling
                 elif self.vel_y >= 0:
                     dy = tile[1].top - self.rect.bottom
                     self.vel_y = 0
@@ -160,6 +162,9 @@ class World():
                     #adding as tuple, adding tiles and coordinates into 1
                     self.tile_list.append(tile)
 
+                if tile == 3:
+                    enemy = Enemy(col_count * tile_size, row_count * tile_size -10)
+                    enemy_group.add(enemy)
                 col_count += 1
             row_count += 1
 
@@ -168,6 +173,15 @@ class World():
             screen.blit(tile[0], tile[1])
             pygame.draw.rect(screen, (255,255,255), tile[1], 2)
 
+class Enemy(pygame.sprite.Sprite):
+    def __init__(self,x,y):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.image.load('assets/enemy.png')
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+
+    def update(self):
 
 #for every grid
 world_data = [
@@ -195,6 +209,7 @@ world_data = [
 
 #player is 80px tall, tile is 50px
 player = Player(100, screen_height - 130) 
+enemy_group = pygame.sprite.Group()
 world = World(world_data)
 
 run = True
@@ -206,6 +221,8 @@ while run:
     screen.blit(sun_img, (100,100))
 
     world.draw()
+    #can draw sprite methods
+    enemy_group.draw(screen) 
 
     player.update()
 
