@@ -15,8 +15,6 @@ pygame.display.set_caption('Platformer')
 #define game variables 
 tile_size = 50
 
-
-
 #load image
 sun_img =  pygame.image.load('assets/sun_img.png')
 bg_img = pygame.image.load('assets/bg.png')
@@ -58,6 +56,8 @@ class Player():
         if key[pygame.K_RIGHT]:
             dx += 5
 
+        #handle animation
+
         #add gravity
         self.vel_y += 1 
         if self.vel_y > 10:
@@ -73,10 +73,6 @@ class Player():
         if self.rect.bottom > screen_height:
             self.rect.bottom = screen_height
             dy = 0
-
-
-
-
 
         #draw player onto screen
         screen.blit(self.image, self.rect)
