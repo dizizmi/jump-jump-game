@@ -3,6 +3,9 @@ from pygame.locals import  *
 
 pygame.init()
 
+clock = pygame.time.Clock()
+fps = 60
+
 screen_width = 1000
 screen_height = 1000
 
@@ -20,21 +23,29 @@ bg_img = pygame.image.load('assets/bg.png')
 
 class Player():
     def __init__(self, x , y):
-        img = pygame.image.load('assets/guy1.png')
-        self.image = pygame.transform.scale(img, (40, 80)) 
+        self.images_right = []
+        #track index from list
+        self.index = 0
+        self.counter = 0
+        #going through 4 movements of character, " f'{}' " captures all 4 images
+        for num in range(1,5):
+            img_right = pygame.image.load(f'assets/guy{num}.png')
+            img_right = pygame.transform.scale(img_right, (40, 80)) 
+            self.images_right.append(img_right)
+    
+        self.image = self.images_right[self.index]
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
         self.vel_y = 0
-        self.jumped = false
+        self.jumped = False
 
     def update(self):
         dx = 0
         dy = 0
+        
         #get keypresses
         key = pygame.key.get_pressed()
-        
-        #jumping up and 
         if key[pygame.K_SPACE] and self.jumped == False:
             self.vel_y = -15
             self.jumped = True
@@ -136,6 +147,8 @@ world = World(world_data)
 run = True
 while run:
 
+    clock.tick(fps)
+    
     screen.blit(bg_img, (0,0))
     screen.blit(sun_img, (100,100))
 
