@@ -17,11 +17,19 @@ tile_size = 50
 #load image
 sun_img =  pygame.image.load('assets/sun_img.png')
 bg_img = pygame.image.load('assets/bg.png')
- 
-def draw_grid():
-    for line in range(0,20):
-        pygame.draw.line(screen, (255,255,255), (0, line * tile_size), (screen_width, line * tile_size))
-        pygame.draw.line(screen, (255,255,255), (line * tile_size, 0), (line * tile_size, screen_height))
+
+class Player():
+    def __init__(self, x , y):
+        img = pygame.image.load('assets/guy1.png')
+        self.image = pygame.transform.scale(img, (40, 80)) 
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+
+    def update(self):
+        #draw player onto screen
+        screen.blit(self.image, self.rect)
+
 
 class World():
     def __init__(self,data):
@@ -84,6 +92,8 @@ world_data = [
 [1, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 ]
 
+#player is 80px tall, tile is 50px
+player = Player(100, screen_height - 130) 
 world = World(world_data)
 
 run = True
@@ -93,7 +103,8 @@ while run:
     screen.blit(sun_img, (100,100))
 
     world.draw()
-    draw_grid()
+
+    player.update()
 
     print(world.tile_list)
 
