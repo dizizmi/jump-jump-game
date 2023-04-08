@@ -27,7 +27,7 @@ class Player():
         self.counter = 0
         #going through 4 movements of character, " f'{}' " captures all 4 images
         for num in range(1,5):
-            img_right = pygame.image.load(f'assets/guy{num}.png').convert_alpha()
+            img_right = pygame.image.load(f'assets/guy{num}.png')
             img_right = pygame.transform.scale(img_right, (40, 80)) 
             self.images_right.append(img_right)
     
@@ -41,6 +41,8 @@ class Player():
     def update(self):
         dx = 0
         dy = 0
+        #slow down images
+        walk_cooldown = 10
 
         #get keypresses
         key = pygame.key.get_pressed()
@@ -53,10 +55,28 @@ class Player():
         #moving left and right
         if key[pygame.K_LEFT]:
             dx -= 5
+            self.counter += 1
         if key[pygame.K_RIGHT]:
             dx += 5
+            self.counter += 1
+        #if left right button not pressed, allow the character image to be stationary -guy1
+        if key[pygame.K_LEFT] == False and key[pygame.K_RIGHT] == False:
+            self.counter = 0
+            self.index = 0
+            self.image = self.images_right[self.index]
 
-        #handle animation
+
+        
+
+        #handle animation, go thru the list of images, ref cooldown to slow down animation
+        self.counter += 1
+        #once counter reaches 20, resets to 0
+        if self.counter > walk_cooldown: 
+            self.counter = 0
+            self.index += 1
+            if self.index >= len(self.images_right):
+                self.index = 0
+            self.image = self.images_right[self.index]
 
         #add gravity
         self.vel_y += 1 
