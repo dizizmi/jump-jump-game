@@ -216,13 +216,9 @@ class Player():
                         self.rect.bottom =  platform.rect.top + 1
                         dy = 0
                         self.in_air = False
-
-
-
-                
-
-
-
+                    #move sideways with the platform
+                    if platform.move_x != 0:
+                        self.rect.x += platform.move_direction
 
             #update player coordinates
             self.rect.x += dx
