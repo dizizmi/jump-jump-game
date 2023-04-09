@@ -112,6 +112,7 @@ class Player():
         dy = 0
         #slow down images
         walk_cooldown = 10
+        col_thresh = 20
 
         if game_over == 0:
 
@@ -198,6 +199,27 @@ class Player():
             if pygame.sprite.spritecollide(self, exit_group, False):
                 game_over = 1
             
+            #check collision with platform
+            for platform in platform_group:
+                #collision in the x direction
+                if platform.rect.colliderect(self.rect.x + dx, self.rect.y, self.width, self.height):
+                    dx = 0
+                #collision in y direction
+                if platform.rect.colliderect(self.rect.x, self.rect.y + dy, self.width, self.height):
+                    #check for collision
+                    if abs((self.rect.top + dy) - platform.rect.bottom) < col_thresh:
+                        self.vel_y = 0
+                        #so cannot go thru platform
+                        dy = platform.rect.bottom - self.rect.top
+                    #check if above platform
+                    elif abs((self.rect.bottom + dy) - platform.rect.top) < col_thresh:
+                        self.rect.bottom =  platform.rect.top + 1
+                        dy = 0
+                        self.in_air = False
+
+
+
+                
 
 
 
