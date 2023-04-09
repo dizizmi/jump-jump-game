@@ -365,7 +365,12 @@ while run:
                 game_over = 0
             else:
                 #restart level
-                pass
+                if restart_button.draw():
+                    level = 1
+                    #reset level
+                    world_data = []
+                    world = reset_level(level)
+                    game_over = 0
 
 
     for event in pygame.event.get():
