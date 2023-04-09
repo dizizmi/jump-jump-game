@@ -1,5 +1,7 @@
 import pygame
 from pygame.locals import  *
+import pickle
+from os import path
 
 pygame.init()
 
@@ -16,6 +18,7 @@ pygame.display.set_caption('Platformer')
 tile_size = 50
 game_over = 0
 main_menu = True
+level = 1
 
 
 #load image
@@ -227,6 +230,11 @@ class World():
                 if tile == 6:
                     spike = Spike(col_count * tile_size, row_count * tile_size + (tile_size // 2))
                     spike_group.add(spike)
+
+                if tile == 8:
+                    exit =  Exit(col_count * tile_size, row_count * tile_size - (tile_size // 2))
+                    exit_group.add(exit)
+
                 col_count += 1
             row_count += 1
 
@@ -262,34 +270,26 @@ class Spike(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
 
-#for every grid
-world_data = [
-[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], 
-[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1], 
-[1, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 1], 
-[1, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 2, 2, 1], 
-[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 7, 0, 5, 0, 0, 0, 1], 
-[1, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 1], 
-[1, 7, 0, 0, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1], 
-[1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1], 
-[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 7, 0, 0, 0, 0, 1], 
-[1, 0, 2, 0, 0, 7, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1], 
-[1, 0, 0, 2, 0, 0, 4, 0, 0, 0, 0, 3, 0, 0, 3, 0, 0, 0, 0, 1], 
-[1, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 1], 
-[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1], 
-[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 7, 0, 0, 0, 0, 2, 0, 1], 
-[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1], 
-[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 2, 0, 2, 2, 2, 2, 2, 1], 
-[1, 0, 0, 0, 0, 0, 2, 2, 2, 6, 6, 6, 6, 6, 1, 1, 1, 1, 1, 1], 
-[1, 0, 0, 0, 0, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], 
-[1, 0, 0, 0, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], 
-[1, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-]
+class Exit(pygame.sprite.Sprite):
+    def __init__(self,x,y):
+        pygame.sprite.Sprite.__init__(self)
+        img = pygame.image.load('assets/exit.png')
+        self.image = pygame.transform.scale(img, (tile_size, int(tile_size * 1.5)))
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
 
 #player is 80px tall, tile is 50px
 player = Player(100, screen_height - 130) 
 enemy_group = pygame.sprite.Group()
 spike_group = pygame.sprite.Group()
+exit_group = pygame.sprite.Group()
+
+#load in level data and create world
+if path.exists(f'level{level}_data'):
+    pickle_in = open(f'level{level}_data', 'rb')
+    world_data = pickle.load(pickle_in)
+
 world = World(world_data)
 
 #create buttons
@@ -319,6 +319,7 @@ while run:
         
         enemy_group.draw(screen) 
         spike_group.draw(screen)
+        exit_group.draw(screen)
 
         game_over = player.update(game_over)
 
