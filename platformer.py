@@ -1,8 +1,11 @@
 import pygame
 from pygame.locals import  *
+from pygame import mixer
 import pickle
 from os import path
 
+pygame.mixer.pre_init(44100, -16, 2, 512)
+mixer.init()
 pygame.init()
 
 clock = pygame.time.Clock()
@@ -36,6 +39,16 @@ bg_img = pygame.image.load('assets/bg.png')
 restart_img = pygame.image.load('assets/restart_btn.png')
 start_img = pygame.image.load('assets/start_btn.png')
 exit_img = pygame.image.load('assets/exit_btn.png')
+
+#load sounds
+pygame.mixer.music.load('assets/music.wav')
+pygame.mixer.music.play(-1,0.0, 5000)
+coin_fx = pygame.mixer.Sound('assets/coin.wav')
+coin_fx.set_volume(0.5)
+jump_fx = pygame.mixer.Sound('assets/jump.wav')
+jump_fx.set_volume(0.5)
+game_over_fx = pygame.mixer.Sound('assets/gameover.wav')
+game_over_fx.set_volume(0.5)
 
 def draw_text(text, font, text_col, x , y):
     img = font.render(text, True, text_col)
@@ -106,6 +119,7 @@ class Player():
             #get keypresses
             key = pygame.key.get_pressed()
             if key[pygame.K_SPACE] and self.jumped == False and self.in_air == False:
+                jump_fx.play()
                 self.vel_y = -15
                 self.jumped = True
             if key[pygame.K_SPACE] == False:
@@ -173,11 +187,12 @@ class Player():
             #check for collision with enemies
             if pygame.sprite.spritecollide(self, enemy_group, False):
                 game_over = -1
+                game_over_fx.play()
             
             #check for collision with spike
             if pygame.sprite.spritecollide(self, spike_group, False):
                 game_over = -1
-                print(game_over)
+                game_over_fx.play()
 
             #check collision with exit door
             if pygame.sprite.spritecollide(self, exit_group, False):
@@ -370,6 +385,7 @@ while run:
 
             if pygame.sprite.spritecollide(player, coin_group, True):
                 score += 1
+                coin_fx.play()
             draw_text('X ' + str(score), font_score, white, tile_size -10, 10)
         
         enemy_group.draw(screen) 
