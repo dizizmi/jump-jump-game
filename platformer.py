@@ -25,7 +25,7 @@ font_score = pygame.font.SysFont('Bauhaus 93', 30)
 tile_size = 50
 game_over = 0
 main_menu = True
-level = 0
+level = 1
 max_levels = 7
 score = 0
 
@@ -52,7 +52,7 @@ game_over_fx.set_volume(0.5)
 
 def draw_text(text, font, text_col, x , y):
     img = font.render(text, True, text_col)
-    screen.blit(img, (x,y))
+    screen.blit(img, (x+10, y+20))
 
 #to reset level
 def reset_level(level):
@@ -98,11 +98,6 @@ class Button():
 
         return action
 
-    
-
-
-
-
 
 class Player():
     def __init__(self, x , y):
@@ -116,7 +111,6 @@ class Player():
         col_thresh = 20
 
         if game_over == 0:
-
 
             #get keypresses
             key = pygame.key.get_pressed()
@@ -145,8 +139,6 @@ class Player():
                 if self.direction == -1:
                     self.image = self.images_left[self.index]
 
-
-            
 
             #handle animation, go thru the list of images, ref cooldown to slow down animation
             self.counter += 1
@@ -227,11 +219,10 @@ class Player():
 
         elif game_over == -1:
             self.image = self.dead_image
-            draw_text('GAME OVER!', font, blue, (screen_width // 2)-200, screen_height //2 )
+            draw_text('GAME OVER!', font, blue, (screen_width // 2)-165, screen_height //2 )
             self.rect.y += 5
         #draw player onto screen
         screen.blit(self.image, self.rect)
-        #lineweight onto character
 
         return game_over
 
@@ -375,8 +366,8 @@ class Spike(pygame.sprite.Sprite):
 class Coin(pygame.sprite.Sprite):
     def __init__(self,x,y):
         pygame.sprite.Sprite.__init__(self)
-        img = pygame.image.load('assets/carrots.png')
-        self.image = pygame.transform.scale(img, (tile_size // 2, tile_size // 2))
+        img = pygame.image.load('assets/mushroom.png')
+        self.image = pygame.transform.scale(img, (tile_size, tile_size))
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
         #creating x y center pts
