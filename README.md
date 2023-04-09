@@ -21,6 +21,6 @@ https://github.com/dizizmi/jump-jump-game
 <img width="400" alt="Screenshot 2023-04-09 at 11 43 41 PM" src="https://user-images.githubusercontent.com/65617120/230783635-a015155e-5c35-4c3f-a7c6-e86293688f7d.png">
 
 
-** Controls
--Movement right, left button
--Spacebar to jump 
+# Controls
+- Movement right, left button
+- Spacebar to jump 
