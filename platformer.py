@@ -15,12 +15,15 @@ pygame.display.set_caption('Platformer')
 #define game variables 
 tile_size = 50
 game_over = 0
+main_menu = True
 
 
 #load image
 sun_img =  pygame.image.load('assets/sun_img.png')
 bg_img = pygame.image.load('assets/bg.png')
 restart_img = pygame.image.load('assets/restart_btn.png')
+start_img = pygame.image.load('assets/start_btn.png')
+exit_img = pygame.image.load('assets/exit_btn.png')
 
 class Button():
     def __init__(self, x, y, image):
@@ -291,6 +294,8 @@ world = World(world_data)
 
 #create buttons
 restart_button = Button(screen_width // 2 - 50, screen_height // 2 + 100, restart_img)
+start_button = Button(screen_width // 2 -150 , screen_height // 2 -200 , start_img)
+exit_button = Button(screen_width // 2 -130, screen_height // 2 -50, exit_img)
 
 run = True
 while run:
@@ -300,22 +305,26 @@ while run:
     screen.blit(bg_img, (0,0))
     screen.blit(sun_img, (100,100))
 
-    world.draw()
+    if main_menu == True: 
+        exit_button.draw()
+        start_button.draw()
+    else: 
+        world.draw()
 
-    if game_over == 0:
-    #can draw sprite methods
-        enemy_group.update()
-    
-    enemy_group.draw(screen) 
-    spike_group.draw(screen)
+        if game_over == 0:
+        #can draw sprite methods
+            enemy_group.update()
+        
+        enemy_group.draw(screen) 
+        spike_group.draw(screen)
 
-    game_over = player.update(game_over)
+        game_over = player.update(game_over)
 
-#character died
-    if game_over == -1:
-        if restart_button.draw():
-            player.reset(100, screen_height - 130) 
-            game_over = 0
+    #character died
+        if game_over == -1:
+            if restart_button.draw():
+                player.reset(100, screen_height - 130) 
+                game_over = 0
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
