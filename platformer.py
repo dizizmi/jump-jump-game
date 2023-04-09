@@ -20,6 +20,7 @@ game_over = 0
 main_menu = True
 level = 0
 max_levels = 7
+score = 0
 
 
 #load image
@@ -253,6 +254,10 @@ class World():
                 if tile == 6:
                     spike = Spike(col_count * tile_size, row_count * tile_size + (tile_size // 2))
                     spike_group.add(spike)
+                
+                if tile == 7:
+                    coin = Coin(col_count * tile_size + (tile_size // 2), row_count * tile_size + (tile_size // 2))
+                    coin_group.add(coin)
 
                 if tile == 8:
                     exit =  Exit(col_count * tile_size, row_count * tile_size - (tile_size // 2))
@@ -293,6 +298,15 @@ class Spike(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
 
+class Coin(pygame.sprite.Sprite):
+    def __init__(self,x,y):
+        pygame.sprite.Sprite.__init__(self)
+        img = pygame.image.load('assets/carrots.png')
+        self.image = pygame.transform.scale(img, (tile_size // 2, tile_size // 2))
+        self.rect = self.image.get_rect()
+        self.rect.center = (x, y)
+        #creating x y center pts
+
 class Exit(pygame.sprite.Sprite):
     def __init__(self,x,y):
         pygame.sprite.Sprite.__init__(self)
@@ -306,6 +320,7 @@ class Exit(pygame.sprite.Sprite):
 player = Player(100, screen_height - 130) 
 enemy_group = pygame.sprite.Group()
 spike_group = pygame.sprite.Group()
+coin_group = pygame.sprite.Group()
 exit_group = pygame.sprite.Group()
 
 #load in level data and create world
@@ -339,9 +354,13 @@ while run:
         if game_over == 0:
         #can draw sprite methods
             enemy_group.update()
+            if pygame.sprite.spritecollide(player, coin_group, True):
+                score += 1
+            
         
         enemy_group.draw(screen) 
         spike_group.draw(screen)
+        coin_group.draw(screen)
         exit_group.draw(screen)
 
         game_over = player.update(game_over)
