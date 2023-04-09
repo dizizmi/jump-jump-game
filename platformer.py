@@ -306,8 +306,10 @@ while run:
     screen.blit(sun_img, (100,100))
 
     if main_menu == True: 
-        exit_button.draw()
-        start_button.draw()
+        if exit_button.draw():
+            run = False
+        if start_button.draw():
+            main_menu = False
     else: 
         world.draw()
 
