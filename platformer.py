@@ -58,6 +58,7 @@ def draw_text(text, font, text_col, x , y):
 def reset_level(level):
     player.reset(100, screen_height - 130) 
     spike_group.empty()
+    platform_group.empty()
     enemy_group.empty()
     exit_group.empty()
 #load in level data and create world
@@ -231,7 +232,6 @@ class Player():
         #draw player onto screen
         screen.blit(self.image, self.rect)
         #lineweight onto character
-        pygame.draw.rect(screen, (255, 255,255, 255), self.rect, 2)
 
         return game_over
 
@@ -322,7 +322,6 @@ class World():
     def draw(self):
         for tile in self.tile_list:
             screen.blit(tile[0], tile[1])
-            pygame.draw.rect(screen, (255,255,255), tile[1], 2)
 
 class Enemy(pygame.sprite.Sprite):
     def __init__(self,x,y):
