@@ -18,7 +18,8 @@ pygame.display.set_caption('Platformer')
 tile_size = 50
 game_over = 0
 main_menu = True
-level = 1
+level = 0
+max_levels = 7
 
 
 #load image
@@ -27,6 +28,22 @@ bg_img = pygame.image.load('assets/bg.png')
 restart_img = pygame.image.load('assets/restart_btn.png')
 start_img = pygame.image.load('assets/start_btn.png')
 exit_img = pygame.image.load('assets/exit_btn.png')
+
+#to reset level
+def reset_level(level):
+    player.reset(100, screen_height - 130) 
+    spike_group.empty()
+    enemy_group.empty()
+    exit_group.empty()
+#load in level data and create world
+    if path.exists(f'level{level}_data'):
+        pickle_in = open(f'level{level}_data', 'rb')
+        world_data = pickle.load(pickle_in)
+
+    world = World(world_data)
+    
+    return world
+
 
 class Button():
     def __init__(self, x, y, image):
@@ -149,6 +166,12 @@ class Player():
             if pygame.sprite.spritecollide(self, spike_group, False):
                 game_over = -1
                 print(game_over)
+
+            #check collision with exit door
+            if pygame.sprite.spritecollide(self, exit_group, False):
+                game_over = 1
+            
+
 
 
 
@@ -326,8 +349,24 @@ while run:
     #character died
         if game_over == -1:
             if restart_button.draw():
-                player.reset(100, screen_height - 130) 
+                world_data = []
+                world = reset_level(level)
                 game_over = 0
+
+    #completed level
+        if game_over == 1:
+            #reset game to next level
+            level += 1
+            if level <= max_levels:
+                #reset level
+                #empty world data
+                world_data = []
+                world = reset_level(level)
+                game_over = 0
+            else:
+                #restart level
+                pass
+
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
