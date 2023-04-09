@@ -14,6 +14,10 @@ screen_height = 1000
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption('Platformer')
 
+#define fonts
+font = pygame.font.SysFont('Bauhaus 93', 70)
+font_score = pygame.font.SysFont('Bauhaus 93', 30)
+
 #define game variables 
 tile_size = 50
 game_over = 0
@@ -22,6 +26,9 @@ level = 0
 max_levels = 7
 score = 0
 
+#define colors
+white = (255,255,255)
+blue = (0,0, 255)
 
 #load image
 sun_img =  pygame.image.load('assets/sun_img.png')
@@ -29,6 +36,10 @@ bg_img = pygame.image.load('assets/bg.png')
 restart_img = pygame.image.load('assets/restart_btn.png')
 start_img = pygame.image.load('assets/start_btn.png')
 exit_img = pygame.image.load('assets/exit_btn.png')
+
+def draw_text(text, font, text_col, x , y):
+    img = font.render(text, True, text_col)
+    screen.blit(img, (x,y))
 
 #to reset level
 def reset_level(level):
@@ -182,6 +193,7 @@ class Player():
 
         elif game_over == -1:
             self.image = self.dead_image
+            draw_text('GAME OVER!', font, blue, (screen_width // 2)-200, screen_height //2 )
             self.rect.y += 5
         #draw player onto screen
         screen.blit(self.image, self.rect)
@@ -354,9 +366,11 @@ while run:
         if game_over == 0:
         #can draw sprite methods
             enemy_group.update()
+            #update score
+
             if pygame.sprite.spritecollide(player, coin_group, True):
                 score += 1
-            
+            draw_text('X ' + str(score), font_score, white, tile_size -10, 10)
         
         enemy_group.draw(screen) 
         spike_group.draw(screen)
@@ -364,32 +378,36 @@ while run:
         exit_group.draw(screen)
 
         game_over = player.update(game_over)
+    #score image
+    score_coin = Coin(tile_size // 2, tile_size //2 )
+    coin_group.add(score_coin)
 
     #character died
-        if game_over == -1:
-            if restart_button.draw():
-                world_data = []
-                world = reset_level(level)
-                game_over = 0
+    if game_over == -1:
+        if restart_button.draw():
+            world_data = []
+            world = reset_level(level)
+            game_over = 0
 
     #completed level
-        if game_over == 1:
-            #reset game to next level
-            level += 1
-            if level <= max_levels:
+    if game_over == 1:
+        #reset game to next level
+        level += 1
+        if level <= max_levels:
+            #reset level
+            #empty world data
+            world_data = []
+            world = reset_level(level)
+            game_over = 0
+        else:
+            draw_text('YOU WIN!', font, blue, (screen_width //2)-140, screen_height // 2)
+            #restart level
+            if restart_button.draw():
+                level = 1
                 #reset level
-                #empty world data
                 world_data = []
                 world = reset_level(level)
                 game_over = 0
-            else:
-                #restart level
-                if restart_button.draw():
-                    level = 1
-                    #reset level
-                    world_data = []
-                    world = reset_level(level)
-                    game_over = 0
 
 
     for event in pygame.event.get():
