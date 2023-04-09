@@ -427,6 +427,7 @@ while run:
                 score += 1
                 coin_fx.play()
             draw_text('X ' + str(score), font_score, white, tile_size -10, 10)
+            draw_text('Level ' + str(level) + '/' + str(max_levels), font_score, white, tile_size + 50, 10)
         
         enemy_group.draw(screen) 
         platform_group.draw(screen)
