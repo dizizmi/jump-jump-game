@@ -25,7 +25,7 @@ font_score = pygame.font.SysFont('Bauhaus 93', 30)
 tile_size = 50
 game_over = 0
 main_menu = True
-level = 1
+level = 0
 max_levels = 7
 score = 0
 
@@ -320,7 +320,7 @@ class Enemy(pygame.sprite.Sprite):
         self.image = pygame.image.load('assets/enemy.png')
         self.rect = self.image.get_rect()
         self.rect.x = x
-        self.rect.y = y
+        self.rect.y = y + 18
         self.move_direction = 1
         self.move_counter = 0
 
@@ -436,7 +436,7 @@ while run:
 
         game_over = player.update(game_over)
     #score image
-    score_coin = Coin(tile_size // 2, tile_size //2 )
+    score_coin = Coin(tile_size // 2, tile_size //2)
     coin_group.add(score_coin)
 
     #character died
