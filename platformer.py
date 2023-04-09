@@ -107,7 +107,7 @@ class Player():
         dx = 0
         dy = 0
         #slow down images
-        walk_cooldown = 10
+        walk_cooldown = 5
         col_thresh = 20
 
         if game_over == 0:
