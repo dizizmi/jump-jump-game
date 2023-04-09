@@ -278,6 +278,14 @@ class World():
                     enemy = Enemy(col_count * tile_size, row_count * tile_size -10)
                     enemy_group.add(enemy)
                 
+                if tile == 4:
+                    platform = Platform(col_count * tile_size, row_count * tile_size, 1, 0)
+                    platform_group.add(platform)
+                
+                if tile == 5:
+                    platform = Platform(col_count * tile_size, row_count * tile_size, 0, 1)
+                    platform_group.add(platform)
+                
                 if tile == 6:
                     spike = Spike(col_count * tile_size, row_count * tile_size + (tile_size // 2))
                     spike_group.add(spike)
@@ -316,6 +324,28 @@ class Enemy(pygame.sprite.Sprite):
             self.move_direction *= -1
             self.move_counter *= -1
 
+class Platform(pygame.sprite.Sprite):
+    def __init__(self,x,y, move_x, move_y):
+        pygame.sprite.Sprite.__init__(self)
+        img = pygame.image.load('assets/tile_0393.png')
+        self.image = pygame.transform.scale(img, (tile_size, tile_size //2 ))
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+        self.move_counter = 0
+        self.move_direction = 1
+        self.move_x = move_x
+        self.move_y = move_y
+     
+    def update(self):
+        self.rect.x += self.move_direction * self.move_x
+        self.rect.y += self.move_direction * self.move_y
+        self.move_counter += 1
+        #moving left, since it hits 51, minus 1
+        if abs(self.move_counter) > 50:
+            self.move_direction *= -1
+            self.move_counter *= -1
+
 class Spike(pygame.sprite.Sprite):
     def __init__(self,x,y):
         pygame.sprite.Sprite.__init__(self)
@@ -346,6 +376,7 @@ class Exit(pygame.sprite.Sprite):
 #player is 80px tall, tile is 50px
 player = Player(100, screen_height - 130) 
 enemy_group = pygame.sprite.Group()
+platform_group = pygame.sprite.Group()
 spike_group = pygame.sprite.Group()
 coin_group = pygame.sprite.Group()
 exit_group = pygame.sprite.Group()
@@ -381,6 +412,7 @@ while run:
         if game_over == 0:
         #can draw sprite methods
             enemy_group.update()
+            platform_group.update()
             #update score
 
             if pygame.sprite.spritecollide(player, coin_group, True):
@@ -389,6 +421,7 @@ while run:
             draw_text('X ' + str(score), font_score, white, tile_size -10, 10)
         
         enemy_group.draw(screen) 
+        platform_group.draw(screen)
         spike_group.draw(screen)
         coin_group.draw(screen)
         exit_group.draw(screen)
