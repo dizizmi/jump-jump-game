@@ -14,7 +14,7 @@ Source for assets:
 https://github.com/dizizmi/jump-jump-game
 ```
 
-2. Open platformer.py on IDE
+2. Run platformer.py
 
 3. Play game :)
 
